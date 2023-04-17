@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import android.util.Log;
 
 import com.itis.libs.parserng.android.expressParser.MathExpression;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         formula = (TextView) findViewById(R.id.textView_formula);
         resultT = (TextView) findViewById(R.id.textView_result);
 
+        findViewById(R.id.button_c).setOnClickListener(e -> clearSingle());
+        findViewById(R.id.button_ce).setOnClickListener(e -> clear());
+        findViewById(R.id.button22).setOnClickListener(e -> equals());
 
         for (int i = 0; i < 14; i++) {//https://stackoverflow.com/questions/22639218/how-to-get-all-buttons-ids-in-one-time-on-android
             @SuppressLint("DiscouragedApi") int id = getResources().getIdentifier("button" + i, "id", getPackageName());
@@ -72,5 +77,17 @@ public class MainActivity extends AppCompatActivity {
         String f = formula.getText().toString();
         MathExpression expression = new MathExpression(f);
         resultT.setText(expression.solve() + "");
+    }
+
+    private void clear() {
+        formula.setText("");
+    }
+
+    private void clearSingle() {
+        formula.setText(formula.getText().subSequence(0, formula.getText().length() - 1));
+    }
+
+    private void equals() {
+        formula.setText(resultT.getText());
     }
 }
