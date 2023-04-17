@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         formula = (TextView) findViewById(R.id.textView_formula);
         resultT = (TextView) findViewById(R.id.textView_result);
 
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_ce).setOnClickListener(e -> clear());
         findViewById(R.id.button22).setOnClickListener(e -> equals());
 
-        for (int i = 0; i < 14; i++) {//https://stackoverflow.com/questions/22639218/how-to-get-all-buttons-ids-in-one-time-on-android
+        final int buttonCount = 14;
+
+        for (int i = 0; i < buttonCount; i++) {//https://stackoverflow.com/questions/22639218/how-to-get-all-buttons-ids-in-one-time-on-android
             @SuppressLint("DiscouragedApi") int id = getResources().getIdentifier("button" + i, "id", getPackageName());
             ((Button) findViewById(id)).setOnClickListener(v -> {
                 String operation = ((TextView) v).getText().toString();

@@ -18,33 +18,9 @@ public class MainActivity extends AppCompatActivity {
         TextView text3 = findViewById(R.id.option3);
         TextView text4 = findViewById(R.id.option4);
 
-        text1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "Textfeld 1 wurde ausgewählt");
-            }
-        });
-
-        text2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "Textfeld 2 wurde ausgewählt");
-            }
-        });
-
-        text3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "Textfeld 3 wurde ausgewählt");
-            }
-        });
-
-        text4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "Textfeld 4 wurde ausgewählt");
-            }
-        });
-
+        text1.setOnClickListener(view -> Log.d("MainActivity", "Textfeld 1 wurde ausgewählt"));
+        text2.setOnClickListener(view -> Log.d("MainActivity", "Textfeld 2 wurde ausgewählt"));
+        text3.setOnClickListener(view -> Log.d("MainActivity", "Textfeld 3 wurde ausgewählt"));
+        text4.setOnClickListener(view -> Log.d("MainActivity", "Textfeld 4 wurde ausgewählt"));
     }
 }
