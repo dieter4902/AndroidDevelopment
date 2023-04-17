@@ -60,11 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
             @SuppressLint("SetTextI18n")
             @Override
-            public void afterTextChanged(Editable editable) {//https://stackoverflow.com/questions/42128648/how-to-use-scriptenginemanager-in-android
-                /*Context context = Context.enter(); //
-                context.setOptimizationLevel(-1); // this is required[2]
-                Scriptable scope = context.initStandardObjects();
-                Object result = context.evaluateString(scope, "18 > 17 and 18 < 100", "<cmd>", 1, null);*/
+            public void afterTextChanged(Editable editable) {
                 calculate();
             }
         });
@@ -72,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void calculate() {
+    private void calculate() {//https://stackoverflow.com/questions/40957885/android-with-math-parser
         String f = formula.getText().toString();
         MathExpression expression = new MathExpression(f);
         resultT.setText(expression.solve() + "");
