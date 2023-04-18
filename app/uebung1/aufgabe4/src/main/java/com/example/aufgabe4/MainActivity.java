@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         formula = (TextView) findViewById(R.id.textView_formula);
         resultT = (TextView) findViewById(R.id.textView_result);
-
+        System.out.println("hello");
         findViewById(R.id.button_c).setOnClickListener(e -> clearSingle());
         findViewById(R.id.button_ce).setOnClickListener(e -> clear());
         findViewById(R.id.button22).setOnClickListener(e -> equals());
