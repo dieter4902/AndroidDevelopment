@@ -7,42 +7,12 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/option2"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="88dp"
-        android:text="option 2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/option1"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
+        android:id="@+id/gps_info"
+        android:layout_width="370dp"
+        android:layout_height="573dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="53dp"
-        android:text="option 1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/option3"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="124dp"
-        android:text="option 3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/option4"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="160dp"
-        android:text="option 4"
+        android:text="gps_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
