@@ -12,11 +12,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/app/ueabun2" />
             <option value="$PROJECT_DIR$/app/uebung1" />
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe1" />
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe3" />
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe4" />
+            <option value="$PROJECT_DIR$/app/uebung2" />
+            <option value="$PROJECT_DIR$/app/uebung2/gpsreciever" />
           </set>
         </option>
       </GradleProjectSettings>
