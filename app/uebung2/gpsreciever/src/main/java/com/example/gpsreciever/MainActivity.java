@@ -6,22 +6,17 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -55,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void initializeLocationTracking() {
         try {
             locationManager.removeUpdates(locationListener);
@@ -67,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             TextView altitude = findViewById(R.id.textAltitude);
             altitude.setText(Double.toString(location.getAltitude()));
             //Log.d("current gps provider", location.getProvider());
+            //TODO Geschwindigkeit. Passen Sie die Ausgabe so an, dass sie gut lesbar ist
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] perms = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
@@ -77,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //TODO handle if permission denied
+        // TODO handle if permission denied
         //quit("required permissions were not found");
     }
 }
