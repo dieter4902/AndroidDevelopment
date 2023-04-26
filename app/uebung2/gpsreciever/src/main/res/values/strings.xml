@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GPSReciever</string>
+    <string-array name="providers">
+        <item>network</item>
+        <item>gps</item>
+        <item>passive</item>
+    </string-array>
+
 </resources>
