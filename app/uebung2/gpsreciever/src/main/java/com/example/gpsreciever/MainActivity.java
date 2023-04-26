@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Spinner providerSpinner;
     private String providerString;
 
     @Override
@@ -39,50 +38,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         providerString = LocationManager.NETWORK_PROVIDER;
         initializeLocationTracking();
-        providerSpinner = findViewById(R.id.provider_spinner);
+        Spinner providerSpinner = findViewById(R.id.provider_spinner);
         providerSpinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.providers, android.R.layout.simple_spinner_item));
-        providerSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
+        providerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                providerString = ((TextView) view).getText().toString();
+                //Log.d("changed provider", providerString);
+                initializeLocationTracking();
+            }
 
-
-    }
-
-    public class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            providerString = ((TextView) view).getText().toString();
-            //Log.d("changed provider", providerString);
-            initializeLocationTracking();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
-
-        }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
 
 
     public void initializeLocationTracking() {
-        // Acquire a reference to the system Location Manager
         try {
             locationManager.removeUpdates(locationListener);
         } catch (NullPointerException ignored) {
         }
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        // Register the listener with the Location Manager to receive location updates
-        // Acquire a reference to the system Location Manager
-        // Define a listener that responds to location updates
-        locationListener = location -> {
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);// Acquire a reference to the system Location Manager
+        locationListener = location -> {// Define a listener that responds to location updates
             TextView latLng = findViewById(R.id.textLatLng);
             latLng.setText(location.getLatitude() + " " + location.getLongitude());
             TextView altitude = findViewById(R.id.textAltitude);
             altitude.setText(Double.toString(location.getAltitude()));
             //Log.d("current gps provider", location.getProvider());
         };
-        // Register the listener with the Location Manager to receive location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] perms = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, perms, 42);
         }
-        locationManager.requestLocationUpdates(providerString, 0L, (float) 0, locationListener);
+        locationManager.requestLocationUpdates(providerString, 0L, (float) 0, locationListener);// Register the listener with the Location Manager to receive location updates
     }
 
 
