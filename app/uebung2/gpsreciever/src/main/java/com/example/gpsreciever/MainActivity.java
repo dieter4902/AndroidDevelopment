@@ -26,11 +26,19 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private String providerString;
+    TextView latLng;
+    TextView altitude;
+    TextView speed;
+    TextView provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        latLng = findViewById(R.id.textLatLng);
+        altitude = findViewById(R.id.textAltitude);
+        speed = findViewById(R.id.textSpeed);
+        provider = findViewById(R.id.textProvider);
         providerString = LocationManager.NETWORK_PROVIDER;
         initializeLocationTracking();
         Spinner providerSpinner = findViewById(R.id.provider_spinner);
@@ -58,12 +66,11 @@ public class MainActivity extends AppCompatActivity {
         }
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);// Acquire a reference to the system Location Manager
         locationListener = location -> {// Define a listener that responds to location updates
-            TextView latLng = findViewById(R.id.textLatLng);
+
             latLng.setText(location.getLatitude() + " " + location.getLongitude());
-            TextView altitude = findViewById(R.id.textAltitude);
             altitude.setText(Double.toString(location.getAltitude()));
-            //Log.d("current gps provider", location.getProvider());
-            //TODO Geschwindigkeit. Passen Sie die Ausgabe so an, dass sie gut lesbar ist
+            speed.setText(Double.toString(location.getSpeed()));
+            provider.setText(location.getProvider());
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] perms = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
