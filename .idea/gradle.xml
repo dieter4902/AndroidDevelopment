@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe4" />
             <option value="$PROJECT_DIR$/app/uebung2" />
             <option value="$PROJECT_DIR$/app/uebung2/gpsreciever" />
+            <option value="$PROJECT_DIR$/app/uebung2/hoehenmesser" />
           </set>
         </option>
       </GradleProjectSettings>
