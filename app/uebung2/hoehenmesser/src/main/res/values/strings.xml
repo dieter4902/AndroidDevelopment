@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hoehenmesser</string>
+    <string name="pressureOffset">0</string>
+    <string name="preference_file_key">SharedPreferenceFileKey</string>
 </resources>

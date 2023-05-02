@@ -4,6 +4,7 @@ import static android.hardware.Sensor.TYPE_PRESSURE;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,15 +23,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private TextView pressureText;
     private TextView altitudeText;
+    private TextView pressureOffsetText;
     float pressure;
-    float pressureOffset;
+    int pressureOffset;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);//https://developer.android.com/training/data-storage/shared-preferences
+        pressureOffset = sharedPref.getInt(getString(R.string.pressureOffset), 0);
+
         pressureText = findViewById(R.id.pressuretext);
         altitudeText = findViewById(R.id.altitudetext);
+        pressureOffsetText = findViewById(R.id.pressureOffset);
+        pressureOffsetText.setText(pressureOffset + "hPa");
+
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
@@ -41,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void changeOffset(float n) {
         pressureOffset += n;
-        ((TextView) findViewById(R.id.pressureOffset)).setText(pressureOffset + "hPa");
+        pressureOffsetText.setText(pressureOffset + "hPa");
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.pressureOffset), pressureOffset);
+        editor.apply();
     }
 
 
