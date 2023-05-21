@@ -10,12 +10,18 @@ import androidx.core.app.ActivityCompat;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     boolean tracking;
 
     private List<Node> trackingList;
+    DrawView drawView;
 
 
     @Override
@@ -59,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         speed = findViewById(R.id.textSpeed);
         trackingButton = findViewById(R.id.trackButton);
         trackingStatus = findViewById(R.id.trackingstatus);
-
+        drawView= findViewById(R.id.drawView);
+        drawView.setBackgroundColor(Color.WHITE);
 
 
         startTracking = view -> {
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         initializeLocationTracking();
     }
 
-    private class Node {
+    private static class Node {
         String time;
         String latitude;
         String longitude;
