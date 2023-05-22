@@ -89,24 +89,6 @@ public class MainActivity extends AppCompatActivity {
         initializeLocationTracking();
     }
 
-    private static class Node {
-        String time;
-        String latitude;
-        String longitude;
-        String height;
-
-        public Node(LocalDateTime time, double latitude, double longitude, double height) {
-            this.time = String.valueOf(time);
-            this.latitude = String.valueOf(latitude);
-            this.longitude = String.valueOf(longitude);
-            this.height = String.valueOf(height);
-        }
-
-        public String toStringArr() {
-            return time + "," + latitude + "," + longitude + "," + height + "\n";
-        }
-    }
-
     private void savetracking() {
         try {
             File file = new File("/storage/emulated/0/Download/tracking.csv");
@@ -144,14 +126,17 @@ public class MainActivity extends AppCompatActivity {
             speed.setText(Double.toString(location.getSpeed()));
             if (tracking) {
                 Log.d("tracking", "added node");
-                trackingList.add(new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+                Node node= new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude());
+                drawView.addNode(node);
+                drawView.invalidate();
+                trackingList.add(node);
             }
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] perms = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, perms, 42);
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, (float) 0, locationListener);// Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, (float) 0, locationListener);// Register the listener with the Location Manager to receive location updates
         trackingButton.setOnClickListener(startTracking);
     }
 
