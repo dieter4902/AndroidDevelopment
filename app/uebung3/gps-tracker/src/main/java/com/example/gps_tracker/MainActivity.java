@@ -3,41 +3,39 @@ package com.example.gps_tracker;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.provider.SyncStateContract;
-import android.util.Log;
-import android.view.SurfaceView;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.SearchView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.opencsv.CSVWriter;
+import org.alternativevision.gpx.GPXParser;
+import org.alternativevision.gpx.beans.GPX;
+import org.alternativevision.gpx.beans.Route;
+import org.alternativevision.gpx.beans.Track;
+import org.alternativevision.gpx.beans.TrackPoint;
+import org.alternativevision.gpx.beans.Waypoint;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     Button trackingButton;
     View.OnClickListener startTracking;
     View.OnClickListener stopTracking;
+
+    Route route;
 
     boolean tracking;
 
@@ -66,11 +66,12 @@ public class MainActivity extends AppCompatActivity {
         speed = findViewById(R.id.textSpeed);
         trackingButton = findViewById(R.id.trackButton);
         trackingStatus = findViewById(R.id.trackingstatus);
-        drawView= findViewById(R.id.drawView);
+        drawView = findViewById(R.id.drawView);
         drawView.setBackgroundColor(Color.WHITE);
 
 
         startTracking = view -> {
+            route = new Route();
             trackingList = new ArrayList<>();
             ((TextView) view).setText("recording location");
             trackingStatus.setText("tracking movement");
@@ -109,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         trackingStatus.setText("ready to track");
+        try {
+            GPX gpx = new GPX();
+            GPXParser gpxParser = new GPXParser();
+            FileOutputStream out = new FileOutputStream("/storage/emulated/0/Download/tracking.gpx");
+            gpx.addRoute(route);
+            gpxParser.writeGPX(gpx, out);
+            out.close();
+        }catch (Exception ignored){
+        }
     }
 
 
@@ -125,9 +135,15 @@ public class MainActivity extends AppCompatActivity {
             altitude.setText(Double.toString(location.getAltitude()));
             speed.setText(Double.toString(location.getSpeed()));
             if (tracking) {
-                Node node= new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude());
+                Node node = new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude());
+                Waypoint waypoint = new Waypoint();
+                waypoint.setLatitude( location.getLatitude());
+                waypoint.setLongitude(location.getLongitude());
+                waypoint.setGeoidHeight(location.getAltitude());
+
                 drawView.addNode(node);
                 drawView.invalidate();
+                route.addRoutePoint(waypoint);
                 trackingList.add(node);
             }
         };
