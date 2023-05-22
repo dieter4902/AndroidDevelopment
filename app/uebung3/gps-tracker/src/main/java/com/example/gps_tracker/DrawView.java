@@ -57,7 +57,7 @@ public class DrawView extends View {
             float latdif = biglat - smallat;
             float scaleY = latdif / longdif;
             float scaleX = longdif / latdif;
-            Log.d("scales", scaleX + "      " + scaleY);
+
             if (scaleX < scaleY) {
                 scaleY = 1;
             } else scaleX = 1;

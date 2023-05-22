@@ -119,13 +119,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (NullPointerException ignored) {
         }
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);// Acquire a reference to the system Location Manager
-        locationListener = location -> {// Define a listener that responds to location updates
+        locationListener = location -> {
 
             latLng.setText(location.getLatitude() + " " + location.getLongitude());
             altitude.setText(Double.toString(location.getAltitude()));
             speed.setText(Double.toString(location.getSpeed()));
             if (tracking) {
-                Log.d("tracking", "added node");
                 Node node= new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude());
                 drawView.addNode(node);
                 drawView.invalidate();
