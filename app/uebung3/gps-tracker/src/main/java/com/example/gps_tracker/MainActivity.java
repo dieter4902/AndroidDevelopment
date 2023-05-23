@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     boolean tracking;
 
-    private List<Node> trackingList;
     DrawView drawView;
 
 
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         startTracking = view -> {
             route = new Route();
-            trackingList = new ArrayList<>();
+            drawView.reset();
             ((TextView) view).setText("recording location");
             trackingStatus.setText("tracking movement");
             view.setOnClickListener(stopTracking);
@@ -85,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
             tracking = false;
             savetracking();
         };
-
-
         initializeLocationTracking();
     }
 
@@ -100,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
-            for (Node trackingNode : trackingList) {
-                bw.write(trackingNode.toStringArr());
+            for (Waypoint point : route.getRoutePoints()) {
+                bw.write(point.toString());
             }
             bw.close();
             Log.d("filewrite", file.getAbsolutePath());
@@ -117,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             gpx.addRoute(route);
             gpxParser.writeGPX(gpx, out);
             out.close();
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
     }
 
@@ -135,16 +132,14 @@ public class MainActivity extends AppCompatActivity {
             altitude.setText(Double.toString(location.getAltitude()));
             speed.setText(Double.toString(location.getSpeed()));
             if (tracking) {
-                Node node = new Node(LocalDateTime.now(), location.getLatitude(), location.getLongitude(), location.getAltitude());
                 Waypoint waypoint = new Waypoint();
-                waypoint.setLatitude( location.getLatitude());
+                waypoint.setLatitude(location.getLatitude());
                 waypoint.setLongitude(location.getLongitude());
                 waypoint.setGeoidHeight(location.getAltitude());
 
-                drawView.addNode(node);
+                drawView.addNode(waypoint);
                 drawView.invalidate();
                 route.addRoutePoint(waypoint);
-                trackingList.add(node);
             }
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
