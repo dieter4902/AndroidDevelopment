@@ -73,6 +73,9 @@ public class DrawView extends View {
                 float startX = (float) (((nodeList.get(i - 1).getLongitude()) - smallong) / longdif * getHeight() * scaleX + offsetX / 2);
                 float stopY = (float) ((((nodeList.get(i).getLatitude()) - smallat) / latdif - 1) * -1 * getWidth() * scaleY + offsetY / 2);
                 float stopX = (float) (((nodeList.get(i).getLongitude()) - smallong) / longdif * getHeight() * scaleX + offsetX / 2);
+                float ratio = i / (float) nodeList.size();
+                int color = Color.rgb(1 - ratio, 1 - ratio, 1 - ratio);
+                paint.setColor(color);
                 canvas.drawLine(startX, startY, stopX, stopY, paint);
             }
         }
