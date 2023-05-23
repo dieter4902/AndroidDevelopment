@@ -41,17 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
-    TextView latLng;
-    TextView altitude;
-    TextView speed;
-    TextView trackingStatus;
-    Button trackingButton;
-    View.OnClickListener startTracking;
-    View.OnClickListener stopTracking;
-
-    Route route;
-
-    boolean tracking;
+    private TextView latLng, altitude, speed, trackingStatus;
+    private Button trackingButton;
+    private View.OnClickListener startTracking, stopTracking;
+    protected static Route route;
+    private boolean tracking;
 
     DrawView drawView;
 
@@ -59,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        route = new Route();
         setContentView(R.layout.activity_main);
         latLng = findViewById(R.id.textLatLng);
         altitude = findViewById(R.id.textAltitude);
@@ -71,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         startTracking = view -> {
             route = new Route();
-            drawView.reset();
             ((TextView) view).setText("recording location");
             trackingStatus.setText("tracking movement");
             view.setOnClickListener(stopTracking);
@@ -137,9 +131,8 @@ public class MainActivity extends AppCompatActivity {
                 waypoint.setLongitude(location.getLongitude());
                 waypoint.setGeoidHeight(location.getAltitude());
 
-                drawView.addNode(waypoint);
-                drawView.invalidate();
                 route.addRoutePoint(waypoint);
+                drawView.invalidate();
             }
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

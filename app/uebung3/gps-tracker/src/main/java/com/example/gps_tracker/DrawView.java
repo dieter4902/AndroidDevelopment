@@ -17,10 +17,8 @@ import java.util.List;
 public class DrawView extends View {
     Paint paint = new Paint();
 
-    Route route;
 
     private void init() {
-        route = new Route();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(10);
@@ -44,7 +42,7 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        List<Waypoint> nodeList = route.getRoutePoints();
+        List<Waypoint> nodeList = MainActivity.route.getRoutePoints();
         if (nodeList == null || nodeList.size() <= 1) {
         } else {
 
@@ -79,13 +77,4 @@ public class DrawView extends View {
             }
         }
     }
-
-    public void reset() {
-        route = new Route();
-    }
-
-    public void addNode(Waypoint point) {
-        route.addRoutePoint(point);
-    }
-
 }
