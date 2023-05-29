@@ -32,8 +32,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             for (Waypoint point : route.getRoutePoints()) {
-                bw.write(point.toString());
+                bw.write(point.getTime() + "," + point.getLatitude() + "," + point.getLongitude() + "," + point.getElevation()+"\n");
             }
             bw.close();
             Log.d("filewrite", file.getAbsolutePath());
@@ -127,9 +129,10 @@ public class MainActivity extends AppCompatActivity {
             speed.setText(Double.toString(location.getSpeed()));
             if (tracking) {
                 Waypoint waypoint = new Waypoint();
+                waypoint.setTime(Date.from(Instant.now()));
                 waypoint.setLatitude(location.getLatitude());
                 waypoint.setLongitude(location.getLongitude());
-                waypoint.setGeoidHeight(location.getAltitude());
+                waypoint.setElevation(location.getAltitude());
 
                 route.addRoutePoint(waypoint);
                 drawView.invalidate();

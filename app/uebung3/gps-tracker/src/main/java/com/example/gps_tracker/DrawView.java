@@ -50,16 +50,27 @@ public class DrawView extends View {
             double biglat = nodeList.get(0).getLatitude();
             double smallong = nodeList.get(0).getLongitude();
             double smallat = nodeList.get(0).getLatitude();
+
             for (Waypoint node : nodeList) {
                 biglong = Math.max(biglong, node.getLongitude());
                 biglat = Math.max(biglat, node.getLatitude());
                 smallong = Math.min(smallong, node.getLongitude());
                 smallat = Math.min(smallat, node.getLatitude());
             }
+
             double longdif = biglong - smallong;
             double latdif = biglat - smallat;
             double scaleY = latdif / longdif;
             double scaleX = longdif / latdif;
+
+            float xGrid = getWidth() / 5.0f;
+            float yGrid = getHeight() / 5.0f;
+
+            for (int i = 0; i <= 5; i++) {
+                paint.setColor(Color.BLUE);
+                canvas.drawLine(0, xGrid * i, getHeight(), xGrid * i, paint);
+                canvas.drawLine(yGrid * i, 0, yGrid * i, getWidth(), paint);
+            }
 
             if (scaleX < scaleY) {
                 scaleY = 1;
