@@ -22,6 +22,8 @@
             <option value="$PROJECT_DIR$/app/uebung2/hoehenmesser" />
             <option value="$PROJECT_DIR$/app/uebung3" />
             <option value="$PROJECT_DIR$/app/uebung3/gps-tracker" />
+            <option value="$PROJECT_DIR$/app/uebung4" />
+            <option value="$PROJECT_DIR$/app/uebung4/android-room" />
           </set>
         </option>
       </GradleProjectSettings>
