@@ -3,7 +3,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        jcenter()
         maven { url 'https://jitpack.io' }
     }
 }
@@ -12,7 +11,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        gradlePluginPortal()
         maven { url 'https://jitpack.io' }
     }
 }
@@ -30,3 +29,4 @@ include ':app:uebung3'
 include ':app:uebung3:gps-tracker'
 include ':app:uebung4'
 include ':app:uebung4:android-room'
+include ':app:uebung4:tracking-room'
