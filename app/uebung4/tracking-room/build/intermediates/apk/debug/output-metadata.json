@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.android_room",
+  "applicationId": "com.example.tracking_room",
   "variantName": "debug",
   "elements": [
     {
@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 1,
       "versionName": "1.0",
-      "outputFile": "android-room-debug.apk"
+      "outputFile": "tracking-room-debug.apk"
     }
   ],
   "elementType": "File"
