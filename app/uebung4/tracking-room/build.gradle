@@ -38,6 +38,7 @@ dependencies {
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     implementation files('libs/GPXParser_20200512.jar')
+    implementation 'de.gerdi-project:GSON:6.0.6'
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 

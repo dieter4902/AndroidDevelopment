@@ -14,13 +14,13 @@ public interface RouteDao {
     // allowing the insert of the same word multiple times by passing a
     // conflict resolution strategy
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Route_t route);
+    void insert(Route route);
 
     @Query("DELETE FROM route_table")
     void deleteAll();
 
     @Query("SELECT * FROM route_table ORDER BY route ASC")
-    LiveData<List<Route_t>> getAlphabetizedRoutes();
+    LiveData<List<Route>> getAlphabetizedRoutes();
 
 }
 

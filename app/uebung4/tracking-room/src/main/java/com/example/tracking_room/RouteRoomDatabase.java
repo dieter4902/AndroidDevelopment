@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Route_t.class}, version = 1, exportSchema = false)
+@Database(entities = {Route.class}, version = 1, exportSchema = false)
 public abstract class RouteRoomDatabase extends RoomDatabase {
 
     public abstract RouteDao routeDao();
@@ -48,9 +48,9 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
                 RouteDao dao = INSTANCE.routeDao();
                 dao.deleteAll();
 
-                Route_t route = new Route_t("Hello");
+                Route route = new Route("Hello", null);
                 dao.insert(route);
-                route = new Route_t("World");
+                route = new Route("World", null);
                 dao.insert(route);
             });
         }

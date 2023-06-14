@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-public class RouteListAdapter extends ListAdapter<Route_t, RouteViewHolder> {
-    public RouteListAdapter(@NonNull DiffUtil.ItemCallback<Route_t> diffCallback) {
+public class RouteListAdapter extends ListAdapter<Route, RouteViewHolder> {
+    public RouteListAdapter(@NonNull DiffUtil.ItemCallback<Route> diffCallback) {
         super(diffCallback);
     }
 
@@ -19,20 +19,20 @@ public class RouteListAdapter extends ListAdapter<Route_t, RouteViewHolder> {
 
     @Override
     public void onBindViewHolder(RouteViewHolder holder, int position) {
-        Route_t current = getItem(position);
-        holder.bind(current.getRoute());
+        Route current = getItem(position);
+        holder.bind(current.name);
     }
 
-    static class RouteDiff extends DiffUtil.ItemCallback<Route_t> {
+    static class RouteDiff extends DiffUtil.ItemCallback<Route> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull Route_t oldItem, @NonNull Route_t newItem) {
+        public boolean areItemsTheSame(@NonNull Route oldItem, @NonNull Route newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Route_t oldItem, @NonNull Route_t newItem) {
-            return oldItem.getRoute().equals(newItem.getRoute());
+        public boolean areContentsTheSame(@NonNull Route oldItem, @NonNull Route newItem) {
+            return oldItem.name.equals(newItem.name);
         }
     }
 }

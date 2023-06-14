@@ -9,9 +9,9 @@ import java.util.List;
 
 public class RouteViewModel extends AndroidViewModel {
 
-    private RouteRepository mRepository;
+    private final RouteRepository mRepository;
 
-    private final LiveData<List<Route_t>> mAllRoutes;
+    private final LiveData<List<Route>> mAllRoutes;
 
     public RouteViewModel(Application application) {
         super(application);
@@ -19,11 +19,11 @@ public class RouteViewModel extends AndroidViewModel {
         mAllRoutes = mRepository.getAllRoutes();
     }
 
-    LiveData<List<Route_t>> getAllRoutes() {
+    LiveData<List<Route>> getAllRoutes() {
         return mAllRoutes;
     }
 
-    public void insert(Route_t route) {
+    public void insert(Route route) {
         mRepository.insert(route);
     }
 }
