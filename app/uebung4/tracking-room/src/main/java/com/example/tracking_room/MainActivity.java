@@ -17,12 +17,14 @@ public class MainActivity extends AppCompatActivity {
 
     private RouteViewModel mRouteViewModel;
     public static final int NEW_ROUTE_ACTIVITY_REQUEST_CODE = 1;
+    public static MainActivity main;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        main = this;
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final RouteListAdapter adapter = new RouteListAdapter(new RouteListAdapter.RouteDiff());
         recyclerView.setAdapter(adapter);
@@ -38,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void startActivity(Route route){
+
+        Intent intent = new Intent(MainActivity.this, ShowRoute.class);
+        intent.putExtra("route", new Gson().toJson(route));
+        startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

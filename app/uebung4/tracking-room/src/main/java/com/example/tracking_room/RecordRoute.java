@@ -85,7 +85,7 @@ public class RecordRoute extends AppCompatActivity {
                 }
                 pTmp[0] = p;
             });
-            com.example.tracking_room.Route route_t = new com.example.tracking_room.Route("test", start, end, route,distance.get() );
+            com.example.tracking_room.Route route_t = new com.example.tracking_room.Route("run from "+Date.from(Instant.now()), start, end, route,distance.get() );
             replyIntent.putExtra(EXTRA_REPLY, new Gson().toJson(route_t));
             setResult(RESULT_OK, replyIntent);
         }
@@ -100,14 +100,12 @@ public class RecordRoute extends AppCompatActivity {
         }
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);// Acquire a reference to the system Location Manager
         locationListener = location -> {
-
             if (tracking) {
                 Waypoint waypoint = new Waypoint();
                 waypoint.setTime(Date.from(Instant.now()));
                 waypoint.setLatitude(location.getLatitude());
                 waypoint.setLongitude(location.getLongitude());
                 waypoint.setElevation(location.getAltitude());
-
                 route.addRoutePoint(waypoint);
                 drawView.route = route;
                 drawView.invalidate();

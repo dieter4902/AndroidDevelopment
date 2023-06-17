@@ -47,11 +47,6 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 RouteDao dao = INSTANCE.routeDao();
                 dao.deleteAll();
-
-                Route route = new Route("Hello", null);
-                dao.insert(route);
-                route = new Route("World", null);
-                dao.insert(route);
             });
         }
     };

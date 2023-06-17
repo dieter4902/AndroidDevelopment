@@ -1,5 +1,6 @@
 package com.example.tracking_room;
 
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {//https://stackoverflow.com/questions/24471109/recyclerview-onclick
     private final TextView routeItemView;
     private Route route;
+
 
     private RouteViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +34,7 @@ class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     @Override
     public void onClick(View view) {
         Log.d("route",route.name);
+        MainActivity.main.startActivity(route);
     }
 
     @Override

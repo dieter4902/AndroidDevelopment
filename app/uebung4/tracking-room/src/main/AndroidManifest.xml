@@ -22,9 +22,6 @@
             android:name="com.example.tracking_room.ShowRoute"
             android:exported="false" />
         <activity
-            android:name="com.example.tracking_room.NewRouteActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

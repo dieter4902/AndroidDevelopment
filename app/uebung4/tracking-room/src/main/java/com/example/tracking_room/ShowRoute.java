@@ -1,13 +1,16 @@
 package com.example.tracking_room;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.alternativevision.gpx.beans.Route;
+import com.google.gson.Gson;
 
-public class ShowRoute extends AppCompatActivity {
+import java.io.Serializable;
+
+public class ShowRoute extends AppCompatActivity implements Serializable {
 
     public Route route;
     DrawView drawView;
@@ -16,9 +19,11 @@ public class ShowRoute extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_single);
+        Log.d("test","in show route");
+        Intent intent = getIntent();
+        route = new Gson().fromJson(intent.getStringExtra("route"), Route.class);
         drawView = findViewById(R.id.drawView2);
-        drawView.setBackgroundColor(Color.WHITE);
-        drawView.route = route;
-        drawView.invalidate();
+        drawView.notRecording = true;
+        drawView.route = new Gson().fromJson(route.route, org.alternativevision.gpx.beans.Route.class);
     }
 }
