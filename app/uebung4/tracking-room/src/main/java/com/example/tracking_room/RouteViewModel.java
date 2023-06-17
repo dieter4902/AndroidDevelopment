@@ -26,5 +26,6 @@ public class RouteViewModel extends AndroidViewModel {
     public void insert(Route route) {
         mRepository.insert(route);
     }
+
 }
 

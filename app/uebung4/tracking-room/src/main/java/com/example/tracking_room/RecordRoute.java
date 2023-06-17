@@ -81,7 +81,7 @@ public class RecordRoute extends AppCompatActivity {
             AtomicReference<Double> distance = new AtomicReference<>((double) 0);
             route.getRoutePoints().forEach(p -> {
                 if (pTmp[0] != null) {
-                    distance.updateAndGet(v -> new Double((double) (v + pTmp[0].distanceTo(p))));
+                    distance.updateAndGet(v -> v + pTmp[0].distanceTo(p));
                 }
                 pTmp[0] = p;
             });

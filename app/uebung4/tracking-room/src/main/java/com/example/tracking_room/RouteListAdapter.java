@@ -20,7 +20,7 @@ public class RouteListAdapter extends ListAdapter<Route, RouteViewHolder> {
     @Override
     public void onBindViewHolder(RouteViewHolder holder, int position) {
         Route current = getItem(position);
-        holder.bind(current.name);
+        holder.bind(current.name,current);
     }
 
     static class RouteDiff extends DiffUtil.ItemCallback<Route> {
