@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import org.alternativevision.gpx.beans.Route;
@@ -51,7 +50,6 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.d("test", "ind draw view");
 
         if (route == null) return;
         List<Waypoint> nodeList = route.getRoutePoints();
