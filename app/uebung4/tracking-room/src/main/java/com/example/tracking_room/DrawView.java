@@ -20,6 +20,7 @@ public class DrawView extends View {
     public boolean notRecording;
 
     double smallat, latdif, scaleY, offsetY, smallong, longdif, scaleX, offsetX;
+    float borderPercent = 0.05f;
 
 
     private void init() {
@@ -99,25 +100,32 @@ public class DrawView extends View {
                 paint.setColor(color);
                 canvas.drawLine(startX, startY, stopX, stopY, paint);
             }
-            drawPoint(canvas,nodeList.get(0),"start");
+            drawPoint(canvas, nodeList.get(0), "start");
             if (notRecording) {
-                drawPoint(canvas,nodeList.get(nodeList.size() - 1),"finish");
-            }else {
-                drawPoint(canvas,nodeList.get(nodeList.size() - 1),"location");
+                drawPoint(canvas, nodeList.get(nodeList.size() - 1), "finish");
+            } else {
+                drawPoint(canvas, nodeList.get(nodeList.size() - 1), "location");
             }
         }
     }
 
-    public void drawPoint(Canvas canvas,Waypoint point, String label){
-        canvas.drawCircle(convertLon(point.getLongitude()),convertLat(point.getLatitude()),15,pointPaint);
-        canvas.drawText(label,convertLon(point.getLongitude()),convertLat(point.getLatitude()),textpaint);
+    public void drawPoint(Canvas canvas, Waypoint point, String label) {
+        canvas.drawCircle(convertLon(point.getLongitude()), convertLat(point.getLatitude()), 15, pointPaint);
+        canvas.drawText(label, convertLon(point.getLongitude()), convertLat(point.getLatitude()), textpaint);
     }
 
     public float convertLat(double lat) {
-        return (float) (((lat - smallat) / latdif - 1) * -1 * getWidth() * scaleY + offsetY / 2);
+        return calcualteBorder((float) (((lat - smallat) / latdif - 1) * -1 * getWidth() * scaleY + offsetY / 2), getWidth());
     }
 
     public float convertLon(double lon) {
-        return (float) ((lon - smallong) / longdif * getHeight() * scaleX + offsetX / 2);
+        return calcualteBorder((float) ((lon - smallong) / longdif * getHeight() * scaleX + offsetX / 2), getHeight());
+    }
+
+    public float calcualteBorder(float n, int widthOrHeight) {
+        float offset = n - widthOrHeight / 2.0f;
+        int ifPositive = offset >= 0 ? -1 : 1;
+        return (float) (offset + (widthOrHeight * borderPercent) * ifPositive + widthOrHeight / 2.0);
+
     }
 }
