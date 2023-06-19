@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -25,5 +27,12 @@ public class ShowRoute extends AppCompatActivity implements Serializable {
         drawView = findViewById(R.id.drawView2);
         drawView.notRecording = true;
         drawView.route = new Gson().fromJson(route.route, org.alternativevision.gpx.beans.Route.class);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview2);
+        PoiListAdapter adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        PoiViewModel mPoiViewModel = new PoiViewModel(getApplication(), route.id);
+        mPoiViewModel.getPois(route.id).observe(this, adapter::submitList);
     }
 }

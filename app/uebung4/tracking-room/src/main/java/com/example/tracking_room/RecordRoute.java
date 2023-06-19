@@ -54,15 +54,11 @@ public class RecordRoute extends AppCompatActivity {
     private boolean tracking;
 
     private static final int CAMERA_REQUEST = 1888;
-    private String imagePath;
     DrawView drawView;
     List<Long> poiIds;
     private com.example.tracking_room.Route activeRoute;
 
-    private PoiViewModel mPoiViewModel;
     long count;
-    private PoiListAdapter adapter;
-    private RecyclerView recyclerView;
 
 
     @Override
@@ -72,8 +68,8 @@ public class RecordRoute extends AppCompatActivity {
         activeRoute = new com.example.tracking_room.Route();
         poiIds = new ArrayList<>();
         route = new Route();
-        recyclerView = findViewById(R.id.recyclerview2);
-        adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
+        RecyclerView recyclerView = findViewById(R.id.recyclerview2);
+        PoiListAdapter adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
@@ -81,7 +77,7 @@ public class RecordRoute extends AppCompatActivity {
         } catch (NullPointerException e) {
             count = 1;
         }
-        mPoiViewModel = new PoiViewModel(getApplication(), count);
+        PoiViewModel mPoiViewModel = new PoiViewModel(getApplication(), count);
         mPoiViewModel.getPois(count).observe(this, adapter::submitList);
 
         trackingButton = findViewById(R.id.trackButton);
@@ -108,13 +104,10 @@ public class RecordRoute extends AppCompatActivity {
         initializeLocationTracking();
 
         Button photoButton = findViewById(R.id.button1);
-        photoButton.setOnClickListener(new View.OnClickListener() {//https://chat.openai.com/share/01252095-f0bc-48f9-8d36-07f14fb0c76d , https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
-
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
+        //https://chat.openai.com/share/01252095-f0bc-48f9-8d36-07f14fb0c76d , https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
+        photoButton.setOnClickListener(v -> {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
         });
     }
 
@@ -188,7 +181,7 @@ public class RecordRoute extends AppCompatActivity {
             File imageFile = saveImageToFile(photo);
 
             // Get the file path
-            imagePath = imageFile.getAbsolutePath();
+            String imagePath = imageFile.getAbsolutePath();
             //create POI
 
             Poi tmp = new Poi(count,"unnamed", new Gson().toJson(route.getRoutePoints().get(route.getRoutePoints().size() - 1)), "empty", imagePath);
