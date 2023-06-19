@@ -22,8 +22,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.alternativevision.gpx.beans.Route;
 import org.alternativevision.gpx.beans.Waypoint;
@@ -31,9 +34,12 @@ import org.alternativevision.gpx.beans.Waypoint;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,13 +57,28 @@ public class RecordRoute extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private String imagePath;
     DrawView drawView;
+    List<Long> poiIds;
+    private com.example.tracking_room.Route activeRoute;
+
+    private PoiViewModel mPoiViewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        route = new Route();
         setContentView(R.layout.activity_record);
+        activeRoute = new com.example.tracking_room.Route();
+        poiIds = new ArrayList<>();
+        route = new Route();
+        RecyclerView recyclerView = findViewById(R.id.recyclerview2);
+        final PoiListAdapter adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mPoiViewModel = new PoiViewModel(getApplication(),activeRoute.id);
+        // Update the cached copy of the routes in the adapter.
+        Type listOfMyClassObject = new TypeToken<List<Long>>(){}.getType();
+        mPoiViewModel.getPois(new Gson().fromJson(activeRoute.poiIDs,listOfMyClassObject)).observe(this, adapter::submitList);
+
         trackingButton = findViewById(R.id.trackButton);
         trackingStatus = findViewById(R.id.trackingstatus);
         drawView = findViewById(R.id.drawView);
@@ -105,8 +126,14 @@ public class RecordRoute extends AppCompatActivity {
                 }
                 pTmp[0] = p;
             });
-            com.example.tracking_room.Route route_t = new com.example.tracking_room.Route("run from "+Date.from(Instant.now()), start, end, route,distance.get() );
-            replyIntent.putExtra(EXTRA_REPLY, new Gson().toJson(route_t));
+            activeRoute.name = "run from "+Date.from(Instant.now());
+            activeRoute.start = start;
+            activeRoute.end = end;
+            activeRoute.route = new Gson().toJson(route);
+            activeRoute.distance = distance.get();
+            activeRoute.poiIDs = new Gson().toJson(poiIds);
+
+            replyIntent.putExtra(EXTRA_REPLY, new Gson().toJson(activeRoute));
             setResult(RESULT_OK, replyIntent);
         }
     }
@@ -156,6 +183,11 @@ public class RecordRoute extends AppCompatActivity {
 
             // Get the file path
             imagePath = imageFile.getAbsolutePath();
+            //create POI
+
+            Poi tmp = new Poi("unnamed",new Gson().toJson(route.getRoutePoints().get(route.getRoutePoints().size()-1)),"empty",imagePath);
+            RouteRoomDatabase.addPoi(tmp);
+            poiIds.add(tmp.id);
         }
     }
 
@@ -174,7 +206,6 @@ public class RecordRoute extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return imageFile;
     }
 }

@@ -15,6 +15,8 @@ public interface RouteDao {
     // conflict resolution strategy
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Route route);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insert(Poi poi);
 
     @Query("DELETE FROM route_table")
     void deleteAll();
@@ -22,5 +24,8 @@ public interface RouteDao {
     @Query("SELECT * FROM route_table ORDER BY route ASC")
     LiveData<List<Route>> getAlphabetizedRoutes();
 
+
+    @Query("SELECT * FROM poi_table ORDER BY location ASC")
+    LiveData<List<Poi>> getAlphabetizedPois();
 }
 

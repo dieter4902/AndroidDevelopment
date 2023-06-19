@@ -11,10 +11,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Route.class}, version = 1, exportSchema = false)
+@Database(entities = {Route.class, Poi.class}, version = 1, exportSchema = false)
 public abstract class RouteRoomDatabase extends RoomDatabase {
 
     public abstract RouteDao routeDao();
+    public abstract PoiDao poiDao();
 
     private static volatile RouteRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -26,8 +27,9 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
             synchronized (RouteRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    RouteRoomDatabase.class, "word_database")
+                                    RouteRoomDatabase.class, "database")
                             .addCallback(sRoomDatabaseCallback)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
@@ -50,5 +52,8 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
             });
         }
     };
+    public static void addPoi(Poi poi){
+        INSTANCE.poiDao().insert(poi);
+    }
 
 }

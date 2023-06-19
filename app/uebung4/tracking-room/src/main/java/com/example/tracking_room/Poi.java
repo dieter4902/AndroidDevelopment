@@ -1,7 +1,5 @@
 package com.example.tracking_room;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,17 +7,17 @@ import androidx.room.PrimaryKey;
 
 public class Poi {
 
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    public long id;
+    public long routeId;
     public String location;
     public String coords;
     public String description;
 
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     public String image;
 
 
-    public Poi(@NonNull String location, String coords, String description, String image) {
+    public Poi(String location, String coords, String description, String image) {
         this.location = location;
         this.coords = coords;
         this.description = description;
