@@ -24,8 +24,5 @@ public interface RouteDao {
     @Query("SELECT * FROM route_table ORDER BY route ASC")
     LiveData<List<Route>> getAlphabetizedRoutes();
 
-
-    @Query("SELECT * FROM poi_table ORDER BY location ASC")
-    LiveData<List<Poi>> getAlphabetizedPois();
 }
 

@@ -1,6 +1,7 @@
 package com.example.tracking_room;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -15,7 +16,7 @@ class PoiRepository {
     // dependency. This adds complexity and much more code, and this sample is not about testing.
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
-    PoiRepository(Application application,long routeId) {
+    PoiRepository(Application application, long routeId) {
         RouteRoomDatabase db = RouteRoomDatabase.getDatabase(application);
         mPoiDao = db.poiDao();
         mPois = mPoiDao.getAll(routeId);
@@ -29,8 +30,12 @@ class PoiRepository {
         });
     }
 
-    LiveData<List<Poi>> getPois(List<Long> poiIds){
-        return mPois;
+    LiveData<List<Poi>> getPois(long routeId) {
+        Log.d("e", "getting pois for route " + routeId);
+        return mPoiDao.getAll(routeId);
+    }
+    long getCount(){
+        return mPoiDao.getRouteCount();
     }
 }
 

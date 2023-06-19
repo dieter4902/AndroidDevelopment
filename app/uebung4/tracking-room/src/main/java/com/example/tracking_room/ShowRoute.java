@@ -19,9 +19,9 @@ public class ShowRoute extends AppCompatActivity implements Serializable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_single);
-        Log.d("test","in show route");
         Intent intent = getIntent();
         route = new Gson().fromJson(intent.getStringExtra("route"), Route.class);
+        Log.d("test",route.id+"");
         drawView = findViewById(R.id.drawView2);
         drawView.notRecording = true;
         drawView.route = new Gson().fromJson(route.route, org.alternativevision.gpx.beans.Route.class);

@@ -17,6 +17,7 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
     public abstract RouteDao routeDao();
     public abstract PoiDao poiDao();
 
+    public static int count;
     private static volatile RouteRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
@@ -55,5 +56,7 @@ public abstract class RouteRoomDatabase extends RoomDatabase {
     public static void addPoi(Poi poi){
         INSTANCE.poiDao().insert(poi);
     }
-
+    public static long getRouteCount(){
+        return INSTANCE.poiDao().getRouteCount();
+    }
 }

@@ -17,7 +17,8 @@ public class Poi {
     public String image;
 
 
-    public Poi(String location, String coords, String description, String image) {
+    public Poi(long routeId,String location, String coords, String description, String image) {
+        this.routeId = routeId;
         this.location = location;
         this.coords = coords;
         this.description = description;

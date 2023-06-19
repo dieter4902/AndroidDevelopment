@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.alternativevision.gpx.beans.Route;
 import org.alternativevision.gpx.beans.Waypoint;
@@ -34,7 +34,6 @@ import org.alternativevision.gpx.beans.Waypoint;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -61,6 +60,9 @@ public class RecordRoute extends AppCompatActivity {
     private com.example.tracking_room.Route activeRoute;
 
     private PoiViewModel mPoiViewModel;
+    long count;
+    private PoiListAdapter adapter;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -70,14 +72,17 @@ public class RecordRoute extends AppCompatActivity {
         activeRoute = new com.example.tracking_room.Route();
         poiIds = new ArrayList<>();
         route = new Route();
-        RecyclerView recyclerView = findViewById(R.id.recyclerview2);
-        final PoiListAdapter adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
+        recyclerView = findViewById(R.id.recyclerview2);
+        adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mPoiViewModel = new PoiViewModel(getApplication(),activeRoute.id);
-        // Update the cached copy of the routes in the adapter.
-        Type listOfMyClassObject = new TypeToken<List<Long>>(){}.getType();
-        mPoiViewModel.getPois(new Gson().fromJson(activeRoute.poiIDs,listOfMyClassObject)).observe(this, adapter::submitList);
+        try {
+            count = RouteRoomDatabase.getRouteCount() ;
+        } catch (NullPointerException e) {
+            count = 1;
+        }
+        mPoiViewModel = new PoiViewModel(getApplication(), count);
+        mPoiViewModel.getPois(count).observe(this, adapter::submitList);
 
         trackingButton = findViewById(R.id.trackButton);
         trackingStatus = findViewById(R.id.trackingstatus);
@@ -117,7 +122,7 @@ public class RecordRoute extends AppCompatActivity {
         if (!route.getRoutePoints().isEmpty()) {
             Intent replyIntent = new Intent();
             long start = route.getRoutePoints().get(0).getTime().getTime();
-            long end = route.getRoutePoints().get(route.getRoutePoints().size()-1).getTime().getTime();
+            long end = route.getRoutePoints().get(route.getRoutePoints().size() - 1).getTime().getTime();
             final Waypoint[] pTmp = {null};
             AtomicReference<Double> distance = new AtomicReference<>((double) 0);
             route.getRoutePoints().forEach(p -> {
@@ -126,7 +131,7 @@ public class RecordRoute extends AppCompatActivity {
                 }
                 pTmp[0] = p;
             });
-            activeRoute.name = "run from "+Date.from(Instant.now());
+            activeRoute.name = "run from " + Date.from(Instant.now());
             activeRoute.start = start;
             activeRoute.end = end;
             activeRoute.route = new Gson().toJson(route);
@@ -173,6 +178,7 @@ public class RecordRoute extends AppCompatActivity {
         // TODO handle if permission denied
         //quit("required permissions were not found");
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -185,9 +191,10 @@ public class RecordRoute extends AppCompatActivity {
             imagePath = imageFile.getAbsolutePath();
             //create POI
 
-            Poi tmp = new Poi("unnamed",new Gson().toJson(route.getRoutePoints().get(route.getRoutePoints().size()-1)),"empty",imagePath);
+            Poi tmp = new Poi(count,"unnamed", new Gson().toJson(route.getRoutePoints().get(route.getRoutePoints().size() - 1)), "empty", imagePath);
             RouteRoomDatabase.addPoi(tmp);
-            poiIds.add(tmp.id);
+            poiIds.add(count);
+            Log.d("e", "added poi for routeId " + count);
         }
     }
 
