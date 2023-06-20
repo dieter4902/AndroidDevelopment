@@ -32,7 +32,7 @@ public class ShowRoute extends AppCompatActivity implements Serializable {
         PoiListAdapter adapter = new PoiListAdapter(new PoiListAdapter.PoiDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        PoiViewModel mPoiViewModel = new PoiViewModel(getApplication(), route.id);
+        PoiViewModel mPoiViewModel = new PoiViewModel(getApplication());
         mPoiViewModel.getPois(route.id).observe(this, adapter::submitList);
     }
 }

@@ -22,6 +22,9 @@ public class DrawView extends View {
     double smallat, latdif, scaleY, offsetY, smallong, longdif, scaleX, offsetX;
     float borderPercent = 0.05f;
 
+    public static Waypoint highlightedPoi;
+    public static DrawView drawView;
+
 
     private void init() {
         notRecording = false;
@@ -31,6 +34,8 @@ public class DrawView extends View {
         pointPaint.setColor(Color.RED);
         textpaint.setColor(Color.BLACK);
         textpaint.setTextSize(50);
+        highlightedPoi = null;
+        drawView = this;
 
     }
 
@@ -51,12 +56,9 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-
         if (route == null) return;
         List<Waypoint> nodeList = route.getRoutePoints();
-        if (nodeList == null || nodeList.size() <= 1) {
-        } else {
-
+        if (nodeList != null && nodeList.size() > 1) {
             double biglong = nodeList.get(0).getLongitude();
             double biglat = nodeList.get(0).getLatitude();
             smallong = nodeList.get(0).getLongitude();
@@ -106,26 +108,33 @@ public class DrawView extends View {
             } else {
                 drawPoint(canvas, nodeList.get(nodeList.size() - 1), "location");
             }
+            if (highlightedPoi!=null){
+                drawPoint(canvas, highlightedPoi, highlightedPoi.getName());
+            }
         }
     }
 
     public void drawPoint(Canvas canvas, Waypoint point, String label) {
-        canvas.drawCircle(convertLon(point.getLongitude()), convertLat(point.getLatitude()), 15, pointPaint);
-        canvas.drawText(label, convertLon(point.getLongitude()), convertLat(point.getLatitude()), textpaint);
+        drawPoint(canvas,point.getLatitude(),point.getLongitude(),label);
+    }
+    public void drawPoint(Canvas canvas,double lat, double lon, String label){
+
+        canvas.drawCircle(convertLon(lon), convertLat(lat), 15, pointPaint);
+        canvas.drawText(label, convertLon(lon), convertLat(lat), textpaint);
     }
 
     public float convertLat(double lat) {
-        return calcualteBorder((float) (((lat - smallat) / latdif - 1) * -1 * getWidth() * scaleY + offsetY / 2), getWidth());
+        return calcualteBorder((float) (((lat - smallat) / latdif - 1) * -1 * (float) getWidth() * scaleY + offsetY / 2), (float) getWidth());
     }
 
     public float convertLon(double lon) {
-        return calcualteBorder((float) ((lon - smallong) / longdif * getHeight() * scaleX + offsetX / 2), getHeight());
+        return calcualteBorder((float) ((lon - smallong) / longdif * (float) getHeight() * scaleX + offsetX / 2), (float) getHeight());
     }
 
-    public float calcualteBorder(float n, int widthOrHeight) {
+    public float calcualteBorder(float n, float widthOrHeight) {
         float offset = n - widthOrHeight / 2.0f;
         int ifPositive = offset >= 0 ? -1 : 1;
-        return (float) (offset + (widthOrHeight * borderPercent) * ifPositive + widthOrHeight / 2.0);
+        return (float) (offset + (widthOrHeight * borderPercent) * (float) ifPositive + widthOrHeight / 2.0);
 
     }
 }

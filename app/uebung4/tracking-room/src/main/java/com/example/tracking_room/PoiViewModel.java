@@ -12,9 +12,9 @@ public class PoiViewModel extends AndroidViewModel {
     private final PoiRepository mRepository;
 
 
-    public PoiViewModel(Application application, long routeId) {
+    public PoiViewModel(Application application) {
         super(application);
-        mRepository = new PoiRepository(application, routeId);
+        mRepository = new PoiRepository(application);
     }
 
     public void insert(Poi poi) {

@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
+import org.alternativevision.gpx.beans.Waypoint;
+
 class PoiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {//https://stackoverflow.com/questions/24471109/recyclerview-onclick
     private final TextView poiItemView;
     private Poi poi;
@@ -33,7 +37,9 @@ class PoiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        Log.d("poi",poi.coords);
+        DrawView.highlightedPoi = new Gson().fromJson(poi.coords, Waypoint.class);
+        DrawView.drawView.invalidate();
+        Log.d("poi route id",""+poi.routeId);
         //MainActivity.main.startActivity(poi);
     }
 
