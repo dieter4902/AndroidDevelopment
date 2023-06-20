@@ -73,8 +73,8 @@ public class RecordRoute extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
-            count = RouteRoomDatabase.getRouteCount();
-            if (count ==0) count = 1;
+            count = RouteRoomDatabase.getRouteCount()+1;
+            if (count == 0) count = 1;
         } catch (NullPointerException e) {
             count = 1;
         }
@@ -152,7 +152,7 @@ public class RecordRoute extends AppCompatActivity {
                 waypoint.setLatitude(location.getLatitude());
                 waypoint.setLongitude(location.getLongitude());
                 waypoint.setElevation(location.getAltitude());
-                waypoint.setName(Date.from(Instant.now())+"");
+                waypoint.setName(Date.from(Instant.now()) + "");
                 route.addRoutePoint(waypoint);
                 drawView.route = route;
                 drawView.invalidate();
@@ -185,7 +185,7 @@ public class RecordRoute extends AppCompatActivity {
             // Get the file path
             String imagePath = imageFile.getAbsolutePath();
             //create POI
-            Waypoint poiWaypoint= route.getRoutePoints().get(route.getRoutePoints().size() - 1);
+            Waypoint poiWaypoint = route.getRoutePoints().get(route.getRoutePoints().size() - 1);
             Poi tmp = new Poi(count, poiWaypoint.getName(), new Gson().toJson(poiWaypoint), "empty", imagePath);
             RouteRoomDatabase.addPoi(tmp);
             poiIds.add(count);

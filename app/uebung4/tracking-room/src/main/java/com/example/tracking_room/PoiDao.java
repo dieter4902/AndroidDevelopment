@@ -20,7 +20,7 @@ public interface PoiDao {
     void insert(Poi poi);
 
 
-    @Query("SELECT * FROM poi_table ORDER BY ID DESC LIMIT 1")
+    @Query("SELECT * FROM route_table ORDER BY ID DESC LIMIT 1")
     long getRouteCount(); //with LiveData
 
 
