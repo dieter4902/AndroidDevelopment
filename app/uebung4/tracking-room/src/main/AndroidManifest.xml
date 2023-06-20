@@ -18,9 +18,15 @@
         android:theme="@style/Theme.MobileAnwendungsEntwicklung">
         <activity
             android:name="com.example.tracking_room.RecordRoute"
+            android:label="Record a Route"
+            android:exported="false" />
+        <activity
+            android:name="com.example.tracking_room.PoiDetails"
+            android:label="Poi Details"
             android:exported="false" />
         <activity
             android:name="com.example.tracking_room.ShowRoute"
+            android:label="Route Details"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

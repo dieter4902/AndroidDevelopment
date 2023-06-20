@@ -48,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("route", new Gson().toJson(route));
         startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
     }
+    public void startActivity(Poi poi){
+
+        Intent intent = new Intent(MainActivity.this, PoiDetails.class);
+        intent.putExtra("poi", new Gson().toJson(poi));
+        startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
+    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

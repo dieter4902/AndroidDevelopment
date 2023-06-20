@@ -21,6 +21,7 @@ class PoiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListe
     private PoiViewHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
         poiItemView = itemView.findViewById(R.id.textView);
     }
 
@@ -45,6 +46,8 @@ class PoiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListe
 
     @Override
     public boolean onLongClick(View view) {
+        Log.d("poop","poop");
+        MainActivity.main.startActivity(poi);
         return false;
     }
 }
