@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-public class PoiDetails extends AppCompatActivity {
+public class ActivityPoiDetails extends AppCompatActivity {
     public Poi poi;
     DrawView drawView;
 

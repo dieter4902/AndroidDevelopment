@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 
-public class ShowRoute extends AppCompatActivity implements Serializable {
+public class ActivityShowRoute extends AppCompatActivity implements Serializable {
 
     public Route route;
     DrawView drawView;

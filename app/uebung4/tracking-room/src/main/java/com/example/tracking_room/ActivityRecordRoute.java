@@ -43,7 +43,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class RecordRoute extends AppCompatActivity {
+public class ActivityRecordRoute extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.example.android.routelistsql.REPLY";
     private LocationManager locationManager;
     private LocationListener locationListener;

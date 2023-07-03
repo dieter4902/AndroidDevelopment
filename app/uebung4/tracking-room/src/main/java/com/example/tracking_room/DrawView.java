@@ -36,7 +36,6 @@ public class DrawView extends View {
         textpaint.setTextSize(50);
         highlightedPoi = null;
         drawView = this;
-
     }
 
     public DrawView(Context context) {
@@ -135,6 +134,5 @@ public class DrawView extends View {
         float offset = n - widthOrHeight / 2.0f;
         int ifPositive = offset >= 0 ? -1 : 1;
         return (float) (offset + (widthOrHeight * borderPercent) * (float) ifPositive + widthOrHeight / 2.0);
-
     }
 }

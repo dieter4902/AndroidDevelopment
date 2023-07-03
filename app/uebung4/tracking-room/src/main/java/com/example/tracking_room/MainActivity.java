@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mRouteViewModel.getAllRoutes().observe(this, adapter::submitList);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, RecordRoute.class);
+            Intent intent = new Intent(MainActivity.this, ActivityRecordRoute.class);
             startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
         });
 
@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void startActivity(Route route){
 
-        Intent intent = new Intent(MainActivity.this, ShowRoute.class);
+        Intent intent = new Intent(MainActivity.this, ActivityShowRoute.class);
         intent.putExtra("route", new Gson().toJson(route));
         startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
     }
     public void startActivity(Poi poi){
 
-        Intent intent = new Intent(MainActivity.this, PoiDetails.class);
+        Intent intent = new Intent(MainActivity.this, ActivityPoiDetails.class);
         intent.putExtra("poi", new Gson().toJson(poi));
         startActivityForResult(intent, NEW_ROUTE_ACTIVITY_REQUEST_CODE);
     }
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("onActivity", resultCode + "      " + resultCode + "       " + data);
         if (requestCode == NEW_ROUTE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Route route = new Gson().fromJson(data.getStringExtra(RecordRoute.EXTRA_REPLY), Route.class);
+            Route route = new Gson().fromJson(data.getStringExtra(ActivityRecordRoute.EXTRA_REPLY), Route.class);
             mRouteViewModel.insert(route);
         } else {
             Toast.makeText(
