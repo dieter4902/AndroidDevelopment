@@ -11,6 +11,9 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Chronometer;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tilegames.R;
 
@@ -26,26 +29,18 @@ public class MinesweeperView extends View {
     private final Bitmap flag, mine, unknown, exploded, pressed;
 
     private boolean gameEnd = false;
-    static int rows = 10, columns = 10, tilewidth, tileHeight;
-    static float bombRatio = 0.05f;
+    public static int rows = 10, columns = 10;
+    static int tilewidth, tileHeight;
+    public static float bombRatio = 0.05f;
     List<Boolean> minefield;
     String[] map;
+    public static TextView flags;
+    public static TextView bombs;
+    public static Chronometer timer;
 
     public MinesweeperView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setOnLongClickListener(new LongClick());
-        setOnClickListener(new ShortClick());
-
-        map = new String[rows * columns];
-        minefield = new ArrayList<>();
-
-        for (int i = 0; i < (rows * columns) * bombRatio; i++) minefield.add(true);
-        for (int i = 0; i < (rows * columns) * (1 - bombRatio); i++) minefield.add(false);
-        Collections.shuffle(minefield);
-
         paint = new Paint();
-
         numbers = new Bitmap[9];
         numbers[0] = BitmapFactory.decodeResource(getResources(), R.drawable.tileempty);
         numbers[1] = BitmapFactory.decodeResource(getResources(), R.drawable.tile1);
@@ -63,6 +58,7 @@ public class MinesweeperView extends View {
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
         pressed = Bitmap.createBitmap(unknown, 0, 0, unknown.getWidth(), unknown.getHeight(), matrix, true);
+        startNew();
     }
 
     @Override
@@ -71,6 +67,7 @@ public class MinesweeperView extends View {
         tileHeight = getHeight() / rows;
         tilewidth = getWidth() / columns;
         drawTiles(canvas);
+
     }
 
     private void drawTiles(Canvas canvas) {
@@ -81,6 +78,8 @@ public class MinesweeperView extends View {
                 if (mapLocation != null) {//if field was pressed
                     if (mapLocation.equals("flag")) {
                         bm = flag;
+                    }else if (mapLocation.equals("unknown")) {
+                        bm = unknown;
                     } else if (mapLocation.equals("pressed")) {
                         bm = pressed;
                     } else if (mapLocation.equals("bomb")) {
@@ -135,11 +134,24 @@ public class MinesweeperView extends View {
         public void onClick(View view) {
             if (longClickFlag) {
                 longClickFlag = false;
-                map[tY * columns + tX] = "flag";
+                if (Objects.equals(map[tY * columns + tX], "flag"))
+                    map[tY * columns + tX] = "unknown";
+                else
+                    map[tY * columns + tX] = "flag";
+                updateFlags();
+
             } else
                 recursiveClick(tX, tY);
             invalidate();
         }
+    }
+
+    public void updateFlags() {
+        int i = 0;
+        for (String e : map) {
+            if (Objects.equals(e, "flag")) i++;
+        }
+        flags.setText(i+"");
     }
 
 
@@ -171,17 +183,67 @@ public class MinesweeperView extends View {
         if (minefield.get(index)) {
             gameOver(index);
         }
+        updateFlags();
+        checkWinningCondition();
 
     }
 
     private void gameOver(int index) {
-        gameEnd = true;
+        makeToast("Game Over!");
         for (int n = 0; n < rows * columns; n++) {
             if (n != index && minefield.get(n)) {
                 map[n] = "bomb";
             }
         }
+        stopGame();
+    }
+
+    private void stopGame() {
+        gameEnd = true;
         setOnLongClickListener(null);
         setOnClickListener(null);
+        timer.stop();
+    }
+
+    public void startNew() {
+        makeToast("starting new Game");
+        gameEnd = false;
+        setOnLongClickListener(new LongClick());
+        setOnClickListener(new ShortClick());
+
+        map = new String[rows * columns];
+        minefield = new ArrayList<>();
+        int nbombs = (int) ((rows * columns) * bombRatio);
+
+        for (int i = 0; i < nbombs; i++) minefield.add(true);
+        for (int i = 0; i < (rows * columns) - nbombs; i++) minefield.add(false);
+        Collections.shuffle(minefield);
+        invalidate();
+    }
+
+    public void makeToast(String message) {
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this.getContext(), message, duration);
+        toast.show();
+    }
+
+    private void checkWinningCondition() {//the player has either won if only all mines are flagged, or in only the mines where not clicked yet
+        boolean strike = false;
+        int bombToFlagDiff = (int) ((rows * columns) * bombRatio);
+        for (int i = 0; i < map.length; i++) {
+            if (!minefield.get(i) && Objects.equals(map[i], "flag")) {
+                return;//a field where a bomb was not placed at was flagged
+            }
+            if (minefield.get(i) && Objects.equals(map[i], "flag")) {
+                bombToFlagDiff--;
+            }
+            if (!minefield.get(i) && !Objects.equals(map[i], "clicked")) {
+                strike = true;
+            }
+        }
+        if (!strike || bombToFlagDiff == 0) {
+            makeToast("You Have Won!");
+            stopGame();
+        }
     }
 }
