@@ -1,5 +1,6 @@
 package com.example.tilegames.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,16 +19,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-
-/*
- * Created by mariocsee on 9/28/16.
- */
-
 public class MinesweeperView extends View {
 
     private final Paint paint;
     private final Bitmap[] numbers;
-    private Bitmap flag, mine, unknown, empty, exploded, pressed;
+    private final Bitmap flag, mine, unknown, exploded, pressed;
 
     private boolean gameEnd = false;
     int rows, columns, tilewidth, tileHeight;
@@ -92,6 +88,8 @@ public class MinesweeperView extends View {
                         bm = flag;
                     } else if (mapLocation.equals("pressed")) {
                         bm = pressed;
+                    } else if (mapLocation.equals("bomb")) {
+                        bm = mine;
                     } else if (mapLocation.equals("clicked") && minefield.get(j * columns + i)) {
                         bm = exploded;
                     } else {
@@ -150,9 +148,10 @@ public class MinesweeperView extends View {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && !gameEnd) {
             tX = ((int) event.getX()) / (tilewidth);
             tY = ((int) event.getY()) / (tileHeight);
             if (map[tY * columns + tX] == null || !Objects.equals(map[tY * columns + tX], "clicked"))
@@ -164,7 +163,7 @@ public class MinesweeperView extends View {
 
     private void recursiveClick(int x, int y) {
         int index = y * columns + x;
-        if (x < 0 || y < 0 || x > columns - 1 || y > rows - 1 || Objects.equals(map[index], "clicked")) {
+        if (x < 0 || y < 0 || x > columns - 1 || y > rows - 1 || Objects.equals(map[index], "clicked")) {//if out of bounds or already clicked, skip
             return;
         }
         map[index] = "clicked";
@@ -174,32 +173,20 @@ public class MinesweeperView extends View {
             recursiveClick(x, y - 1);
             recursiveClick(x, y + 1);
         }
+        if (minefield.get(index)) {
+            gameOver(index);
+        }
+
     }
 
-    private void handleCoverTouch(int tX, int tY) {/*
-        if (tX < 5 && tY < 5 &&
-                MinesweeperModel.getInstance().getCoverContent(tX, tY) == MinesweeperModel.UNTOUCHED &&
-                MinesweeperModel.getInstance().getActionType() == MinesweeperModel.REVEAL) {
-            MinesweeperModel.getInstance().setCoverContent(tX, tY, MinesweeperModel.getInstance().getTouched());
-        } else if (tX < 5 && tY < 5 &&
-                MinesweeperModel.getInstance().getCoverContent(tX, tY) == MinesweeperModel.UNTOUCHED &&
-                MinesweeperModel.getInstance().getActionType() == MinesweeperModel.FLAG) {
-            MinesweeperModel.getInstance().setCoverContent(tX, tY, MinesweeperModel.getInstance().getFlagged());
-        }*/
-    }
-
-    private void winningModel() {/*
-        if (MinesweeperModel.getInstance().checkAllTiles() && !(MinesweeperModel.getInstance().gameLost())) {
-            //game won
-            ((MainActivity) getContext()).showSnackBarWithDelete(
-                    "Congratulations you win!");
-            gameEnd = true;
-        } else if (MinesweeperModel.getInstance().gameLost()) {
-            ((MainActivity) getContext()).showSnackBarWithDelete(
-                    "Oh no! You lost!");
-            gameEnd = true;
-        } else if (!(MinesweeperModel.getInstance().checkAllTiles()) && !(MinesweeperModel.getInstance().gameLost())) {
-
-        }*/
+    private void gameOver(int index) {
+        gameEnd = true;
+        for (int n = 0; n < rows * columns; n++) {
+            if (n != index && minefield.get(n)) {
+                map[n] = "bomb";
+            }
+        }
+        setOnLongClickListener(null);
+        setOnClickListener(null);
     }
 }
