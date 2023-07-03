@@ -26,7 +26,8 @@ public class MinesweeperView extends View {
     private final Bitmap flag, mine, unknown, exploded, pressed;
 
     private boolean gameEnd = false;
-    int rows, columns, tilewidth, tileHeight;
+    static int rows = 10, columns = 10, tilewidth, tileHeight;
+    static float bombRatio = 0.05f;
     List<Boolean> minefield;
     String[] map;
 
@@ -36,22 +37,16 @@ public class MinesweeperView extends View {
         setOnLongClickListener(new LongClick());
         setOnClickListener(new ShortClick());
 
-        rows = 10;
-        columns = 10;
-        float bombRatio = 0.05f;
+        map = new String[rows * columns];
         minefield = new ArrayList<>();
 
         for (int i = 0; i < (rows * columns) * bombRatio; i++) minefield.add(true);
         for (int i = 0; i < (rows * columns) * (1 - bombRatio); i++) minefield.add(false);
         Collections.shuffle(minefield);
 
-        map = new String[rows * columns];
-
         paint = new Paint();
 
-
         numbers = new Bitmap[9];
-
         numbers[0] = BitmapFactory.decodeResource(getResources(), R.drawable.tileempty);
         numbers[1] = BitmapFactory.decodeResource(getResources(), R.drawable.tile1);
         numbers[2] = BitmapFactory.decodeResource(getResources(), R.drawable.tile2);
