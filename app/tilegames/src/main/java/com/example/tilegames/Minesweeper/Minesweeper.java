@@ -1,4 +1,4 @@
-package com.example.tilegames;
+package com.example.tilegames.Minesweeper;
 
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.tilegames.views.MinesweeperView;
+import com.example.tilegames.R;
 
 public class Minesweeper extends AppCompatActivity {
     Chronometer timer;

@@ -9,7 +9,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileAnwendungsEntwicklung">
         <activity
-            android:name=".Minesweeper"
+            android:name=".Minesweeper.Minesweeper"
+            android:label="Minesweeper"
+            android:exported="false" />
+        <activity
+            android:name=".Minesweeper.MinesweeperSettings"
             android:label="Minesweeper"
             android:exported="false" />
         <activity
@@ -17,7 +21,7 @@
             android:label="Sudoku"
             android:exported="false" />
         <activity
-            android:name=".TicTacToe"
+            android:name=".TicTacToe.TicTacToe"
             android:label="TicTacToe"
             android:exported="false" />
         <activity

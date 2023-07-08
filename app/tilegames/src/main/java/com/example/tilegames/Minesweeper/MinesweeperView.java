@@ -1,4 +1,4 @@
-package com.example.tilegames.views;
+package com.example.tilegames.Minesweeper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
