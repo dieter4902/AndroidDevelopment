@@ -2,7 +2,6 @@ package com.example.tilegames.TicTacToe;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,17 +15,18 @@ import java.util.Objects;
 public class TicTacToeView extends View {
 
     private final Paint paint;
+    private final Paint textPaint;
+    private final Paint bannerPaint;
     private final Paint playerOnePaint;
     private final Paint playerTwoPaint;
-    private final Bitmap playerOne;
-    private final Bitmap playerTwo;
 
     private boolean gameEnd = false;
     public static int rows = 3;
     static int tilewidth, tileHeight;
     String[] map;
     float strokeWidth = 50;
-    String currentPlayer = "player1";
+    String currentPlayer;
+    String message;
 
     public TicTacToeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,8 +45,13 @@ public class TicTacToeView extends View {
         playerTwoPaint.setStyle(Paint.Style.STROKE);
         playerTwoPaint.setStrokeCap(Paint.Cap.ROUND);
         playerTwoPaint.setStrokeWidth(strokeWidth);
-        playerOne = null;
-        playerTwo = null;
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(100);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        bannerPaint = new Paint();
+        bannerPaint.setColor(Color.GRAY);
+        bannerPaint.setAlpha(255 / 100 * 80);
         startNew();
         setBackgroundColor(Color.WHITE);
     }
@@ -76,38 +81,45 @@ public class TicTacToeView extends View {
                         canvas.drawLine(boxSize * i + padding * 3, boxSize * j + padding * 3, boxSize * (i + 1) - padding * 3, boxSize * (j + 1) - padding * 3, playerOnePaint);
                         canvas.drawLine(boxSize * i + padding * 3, boxSize * (j + 1) - padding * 3, boxSize * (i + 1) - padding * 3, boxSize * j + padding * 3, playerOnePaint);
                     } else if (mapLocation.equals("player2")) {
-                        canvas.drawCircle(boxSize * (i + 0.5f), boxSize * (j + 0.5f), boxSize/2-padding*3, playerTwoPaint);
+                        canvas.drawCircle(boxSize * (i + 0.5f), boxSize * (j + 0.5f), boxSize / 2 - padding * 3, playerTwoPaint);
                     }
                 }
             }
         }
+        if (message != null) {
+            canvas.drawRect(padding * 3, boxSize * 1.25f, fieldSize - padding * 3, boxSize * 1.75f, bannerPaint);
+            canvas.drawText(message, fieldSize / 2, fieldSize / 2 + textPaint.getTextSize() / 3f, textPaint);
+        }
     }
 
-
-    int tX, tY;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN && !gameEnd) {
-            tX = ((int) event.getX()) / (tilewidth);
-            tY = ((int) event.getY()) / (tileHeight);
+            int tX = ((int) event.getX()) / (tilewidth);
+            int tY = ((int) event.getY()) / (tileHeight);
             if (map[tY * rows + tX] == null)
                 map[tY * rows + tX] = currentPlayer;
+            checkWinningCondition();
             currentPlayer = Objects.equals(currentPlayer, "player1") ? "player2" : "player1";
+        } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            startNew();
         }
         invalidate();
         return super.onTouchEvent(event);
     }
 
-    private void stopGame() {
+    private void stopGame(String message) {
+        this.message = message;
+        makeToast(message);
         gameEnd = true;
-        setOnLongClickListener(null);
-        setOnClickListener(null);
     }
 
     public void startNew() {
+        message = null;
         makeToast("starting new Game");
         gameEnd = false;
+        currentPlayer = "player1";
         map = new String[rows * rows];
         invalidate();
     }
@@ -119,8 +131,19 @@ public class TicTacToeView extends View {
     }
 
     private void checkWinningCondition() {
-        makeToast("You Have Won!");
-        stopGame();
+        if (checkIndicees(0, 1, 2) || checkIndicees(3, 4, 5) || checkIndicees(6, 7, 8) ||//horizontal
+                checkIndicees(0, 3, 6) || checkIndicees(1, 4, 7) || checkIndicees(2, 5, 8) ||//vertical
+                checkIndicees(0, 4, 8) || checkIndicees(2, 4, 6)) {//diagonal
+            stopGame((Objects.equals(currentPlayer, "player1") ? "Player One" : "Player Two") + " Won!");
+            return;
+        }
+        for (String e : map) {
+            if (e == null) return;
+        }
+        stopGame("Tie!");
+    }
 
+    private boolean checkIndicees(int x, int y, int z) {
+        return map[x] != null && Objects.equals(map[x], map[y]) && Objects.equals(map[y], map[z]);
     }
 }
