@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +16,8 @@ import java.util.Objects;
 public class TicTacToeView extends View {
 
     private final Paint paint;
+    private final Paint playerOnePaint;
+    private final Paint playerTwoPaint;
     private final Bitmap playerOne;
     private final Bitmap playerTwo;
 
@@ -23,13 +25,30 @@ public class TicTacToeView extends View {
     public static int rows = 3;
     static int tilewidth, tileHeight;
     String[] map;
+    float strokeWidth = 50;
+    String currentPlayer = "player1";
 
     public TicTacToeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeWidth(strokeWidth);
+        playerOnePaint = new Paint();
+        playerOnePaint.setColor(Color.RED);
+        playerOnePaint.setStyle(Paint.Style.STROKE);
+        playerOnePaint.setStrokeCap(Paint.Cap.ROUND);
+        playerOnePaint.setStrokeWidth(strokeWidth);
+        playerTwoPaint = new Paint();
+        playerTwoPaint.setColor(Color.BLUE);
+        playerTwoPaint.setStyle(Paint.Style.STROKE);
+        playerTwoPaint.setStrokeCap(Paint.Cap.ROUND);
+        playerTwoPaint.setStrokeWidth(strokeWidth);
         playerOne = null;
         playerTwo = null;
         startNew();
+        setBackgroundColor(Color.WHITE);
     }
 
     @Override
@@ -42,75 +61,42 @@ public class TicTacToeView extends View {
     }
 
     private void drawTiles(Canvas canvas) {
+        float boxSize = canvas.getHeight() / 3.0f;
+        float fieldSize = canvas.getHeight();
+        float padding = strokeWidth / 2;
+        canvas.drawLine(padding, boxSize, fieldSize - padding, boxSize, paint);
+        canvas.drawLine(padding, boxSize * 2, fieldSize - padding, boxSize * 2, paint);
+        canvas.drawLine(boxSize, padding, boxSize, fieldSize - padding, paint);
+        canvas.drawLine(boxSize * 2, padding, boxSize * 2, fieldSize - padding, paint);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < rows; j++) {
-                Bitmap bm = null;
                 String mapLocation = map[j * rows + i];
                 if (mapLocation != null) {//if field was pressed
                     if (mapLocation.equals("player1")) {
-                        bm = playerOne;
+                        canvas.drawLine(boxSize * i + padding * 3, boxSize * j + padding * 3, boxSize * (i + 1) - padding * 3, boxSize * (j + 1) - padding * 3, playerOnePaint);
+                        canvas.drawLine(boxSize * i + padding * 3, boxSize * (j + 1) - padding * 3, boxSize * (i + 1) - padding * 3, boxSize * j + padding * 3, playerOnePaint);
                     } else if (mapLocation.equals("player2")) {
-                        bm = playerTwo;
-                    } else continue;
+                        canvas.drawCircle(boxSize * (i + 0.5f), boxSize * (j + 0.5f), boxSize/2-padding*3, playerTwoPaint);
+                    }
                 }
-                if (bm == null) continue;
-                Rect src = new Rect(0, 0, bm.getWidth() - 1, bm.getHeight() - 1);
-                Rect dest = new Rect((i) * tilewidth, (j) * tileHeight, (i + 1) * tilewidth, (j + 1) * tileHeight);
-                canvas.drawBitmap(bm, src, dest, paint);
             }
         }
     }
 
 
     int tX, tY;
-    boolean longClickFlag;
-
-    private class LongClick implements OnLongClickListener {
-        @Override
-        public boolean onLongClick(View view) {
-            if (!Objects.equals(map[tY * rows + tX], "clicked")) {
-                longClickFlag = true;
-            }
-            return false;
-        }
-    }
-
-    private class ShortClick implements OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if (longClickFlag) {
-                longClickFlag = false;
-                if (Objects.equals(map[tY * rows + tX], "flag"))
-                    map[tY * rows + tX] = "unknown";
-                else
-                    map[tY * rows + tX] = "flag";
-
-            } else
-                recursiveClick(tX, tY);
-            invalidate();
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN && !gameEnd) {
             tX = ((int) event.getX()) / (tilewidth);
             tY = ((int) event.getY()) / (tileHeight);
-            if (map[tY * rows + tX] == null || !Objects.equals(map[tY * rows + tX], "clicked"))
-                map[tY * rows + tX] = "pressed";//only for animation
+            if (map[tY * rows + tX] == null)
+                map[tY * rows + tX] = currentPlayer;
+            currentPlayer = Objects.equals(currentPlayer, "player1") ? "player2" : "player1";
         }
         invalidate();
         return super.onTouchEvent(event);
-    }
-
-    private void recursiveClick(int x, int y) {
-        int index = y * rows + x;
-        if (x < 0 || y < 0 || x > rows - 1 || y > rows - 1 || Objects.equals(map[index], "clicked")) {//if out of bounds or already clicked, skip
-            return;
-        }
-        map[index] = "clicked";
-        checkWinningCondition();
     }
 
     private void stopGame() {
@@ -122,8 +108,6 @@ public class TicTacToeView extends View {
     public void startNew() {
         makeToast("starting new Game");
         gameEnd = false;
-        setOnLongClickListener(new LongClick());
-        setOnClickListener(new ShortClick());
         map = new String[rows * rows];
         invalidate();
     }
