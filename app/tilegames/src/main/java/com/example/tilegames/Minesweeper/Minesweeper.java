@@ -25,6 +25,7 @@ public class Minesweeper extends AppCompatActivity {
         MinesweeperView.timer = timer;
         findViewById(R.id.restartButton).setOnClickListener(view -> {
             game.startNew();
+            timer.start();
             timer.setBase(SystemClock.elapsedRealtime());
         });
         findViewById(R.id.backButton).setOnClickListener(view -> this.finish());
