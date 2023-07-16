@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ public class TicTacToeView extends View {
     private final Paint textPaint;
     private final Paint bannerPaint;
     private final Paint playerOnePaint;
-    private final Paint playerTwoPaint;
+    private final Paint playerTwoPaint, winningPaint;
 
     private boolean gameEnd = false;
     public static int rows = 3;
@@ -52,6 +53,12 @@ public class TicTacToeView extends View {
         bannerPaint = new Paint();
         bannerPaint.setColor(Color.GRAY);
         bannerPaint.setAlpha(255 / 100 * 80);
+        winningPaint = new Paint();
+        winningPaint.setColor(Color.GREEN);
+        winningPaint.setAlpha(200);
+        winningPaint.setStyle(Paint.Style.STROKE);
+        winningPaint.setStrokeCap(Paint.Cap.ROUND);
+        winningPaint.setStrokeWidth(strokeWidth);
         startNew();
         setBackgroundColor(Color.WHITE);
     }
@@ -86,6 +93,15 @@ public class TicTacToeView extends View {
                 }
             }
         }
+        if (a != null && b != null) {
+            float e = boxSize / 2;
+            int sx = a % 3;
+            int sy = (a - sx) / 3;
+            int ex = b % 3;
+            int ey = (b - ex) / 3;
+            Log.d("line", sx + " " + sy + ":" + ex + " " + ey);
+            canvas.drawLine(e + sx * boxSize, e + sy * boxSize, e + ex * boxSize, e + ey * boxSize, winningPaint);
+        }
         if (message != null) {
             canvas.drawRect(padding * 3, boxSize * 1.25f, fieldSize - padding * 3, boxSize * 1.75f, bannerPaint);
             canvas.drawText(message, fieldSize / 2, fieldSize / 2 + textPaint.getTextSize() / 3f, textPaint);
@@ -98,10 +114,11 @@ public class TicTacToeView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN && !gameEnd) {
             int tX = ((int) event.getX()) / (tilewidth);
             int tY = ((int) event.getY()) / (tileHeight);
-            if (map[tY * rows + tX] == null)
+            if (map[tY * rows + tX] == null) {
                 map[tY * rows + tX] = currentPlayer;
-            checkWinningCondition();
-            currentPlayer = Objects.equals(currentPlayer, "player1") ? "player2" : "player1";
+                currentPlayer = Objects.equals(currentPlayer, "player1") ? "player2" : "player1";
+                checkWinningCondition();
+            }
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             startNew();
         }
@@ -117,6 +134,8 @@ public class TicTacToeView extends View {
 
     public void startNew() {
         message = null;
+        a = null;
+        b = null;
         makeToast("starting new Game");
         gameEnd = false;
         currentPlayer = "player1";
@@ -143,7 +162,18 @@ public class TicTacToeView extends View {
         stopGame("Tie!");
     }
 
+    Integer a, b = null;
+
+    private void markWinningLine(int x, int y) {
+        a = x;
+        b = y;
+    }
+
     private boolean checkIndicees(int x, int y, int z) {
-        return map[x] != null && Objects.equals(map[x], map[y]) && Objects.equals(map[y], map[z]);
+        boolean result = map[x] != null && Objects.equals(map[x], map[y]) && Objects.equals(map[y], map[z]);
+        if (result) {
+            markWinningLine(x, z);
+        }
+        return result;
     }
 }

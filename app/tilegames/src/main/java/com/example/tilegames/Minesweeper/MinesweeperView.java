@@ -78,7 +78,7 @@ public class MinesweeperView extends View {
                 if (mapLocation != null) {//if field was pressed
                     if (mapLocation.equals("flag")) {
                         bm = flag;
-                    }else if (mapLocation.equals("unknown")) {
+                    } else if (mapLocation.equals("unknown")) {
                         bm = unknown;
                     } else if (mapLocation.equals("pressed")) {
                         bm = pressed;
@@ -151,7 +151,7 @@ public class MinesweeperView extends View {
         for (String e : map) {
             if (Objects.equals(e, "flag")) i++;
         }
-        flags.setText(i+"");
+        flags.setText(i + "");
     }
 
 
@@ -174,11 +174,12 @@ public class MinesweeperView extends View {
             return;
         }
         map[index] = "clicked";
-        if (calculateContent(x, y) == 0) {
-            recursiveClick(x - 1, y);
-            recursiveClick(x + 1, y);
-            recursiveClick(x, y - 1);
-            recursiveClick(x, y + 1);
+        if (calculateContent(x, y) == 0) {//uncover surrounding tiles if clicked tile has no bombs nearby
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    recursiveClick(x - 1 + i, y - 1 + j);
+                }
+            }
         }
         if (minefield.get(index)) {
             gameOver(index);
