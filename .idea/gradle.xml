@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/tilegames" />
             <option value="$PROJECT_DIR$/app/uebung1" />
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe1" />
             <option value="$PROJECT_DIR$/app/uebung1/aufgabe3" />
@@ -22,6 +23,9 @@
             <option value="$PROJECT_DIR$/app/uebung2/hoehenmesser" />
             <option value="$PROJECT_DIR$/app/uebung3" />
             <option value="$PROJECT_DIR$/app/uebung3/gps-tracker" />
+            <option value="$PROJECT_DIR$/app/uebung4" />
+            <option value="$PROJECT_DIR$/app/uebung4/android-room" />
+            <option value="$PROJECT_DIR$/app/uebung4/tracking-room" />
           </set>
         </option>
       </GradleProjectSettings>
